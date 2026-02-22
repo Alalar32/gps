@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green Pastures School | Ghana</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <nav
+      class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-20">
+          <div class="flex items-center">
+            <a href="/" class="flex items-center space-x-2">
+              <div
+                class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center"
+              >
+                <span class="text-white font-bold text-xl">G</span>
+              </div>
+              <span class="text-2xl font-bold tracking-tight text-slate-800"
+                >Green<span class="text-green-600">Pastures</span></span
+              >
+            </a>
+          </div>
+
+          <div
+            class="hidden md:flex items-center space-x-8 text-sm font-medium"
+          >
+            <a
+              href="#about"
+              class="text-slate-600 hover:text-green-600 transition"
+              >About</a
+            >
+            
+            
+            <a
+              href="#contact"
+              class="text-slate-600 hover:text-green-600 transition"
+              >Contact Us</a
+            >
+            <a>
+              <a
+                href="{% url 'login' %}"
+                class="px-5 py-2.5 bg-slate-900 text-white rounded-full hover:bg-slate-800 transition shadow-md shadow-slate-200"
+                >Login</a
+              >
+          </div>
+
+          <div class="md:hidden flex items-center">
+            <button
+              id="mobile-menu-button"
+              class="text-slate-600 focus:outline-none"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden bg-white border-b border-slate-200 px-4 py-4 space-y-3"
+      >
+        <a href="#about" class="block text-slate-600 py-2">About Us</a>
+        <a href="#contact" class="block text-slate-600 py-2">Contact Us</a>
+      </div>
+    </nav>
+
+    <header
+      class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+          <div class="text-center lg:text-left">
+            <span
+              class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-green-600 uppercase bg-green-50 rounded-full"
+            >
+              Excellence in Ghanaian Education
+            </span>
+            <h1
+              class="text-4xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6"
+            >
+              Raising the Next Generation at
+              <span class="text-green-600">Green Pastures.</span>
+            </h1>
+            <p class="text-lg text-slate-600 mb-10 max-w-xl mx-auto lg:mx-0">
+              From Creche to JHS, we provide a holistic learning experience
+              rooted in Ghanaian values and international standards.
+            </p>
+            <div
+              class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4"
+            >
+              <a
+                href="#levels"
+                class="px-8 py-4 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition shadow-lg shadow-green-200 text-center"
+              >
+                Our Academic Levels
+              </a>
+              <a
+                href="#contact"
+                class="px-8 py-4 bg-white border-2 border-slate-200 text-slate-700 rounded-xl font-semibold hover:border-green-600 hover:text-green-600 transition text-center"
+              >
+                Admission Inquiry
+              </a>
+            </div>
+          </div>
+          <div class="mt-16 lg:mt-0 relative">
+            <div
+              class="aspect-square rounded-3xl overflow-hidden shadow-2xl bg-slate-200"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1523050335392-9ae86774929f?auto=format&fit=crop&q=80&w=800"
+                alt="Students"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            <div
+              class="absolute -bottom-6 -left-6 w-32 h-32 bg-green-600/10 rounded-full blur-3xl"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section id="about" class="py-24 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold text-slate-900 mb-4">
+            Our Academic Structure
+          </h2>
+          <p class="text-slate-600">
+            Comprehensive education following the GES curriculum and beyond.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="bg-slate-50 rounded-3xl p-8 border border-slate-100 hover:shadow-xl transition"
+          >
+            <div
+              class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6"
+            >
+              <span class="text-green-600 font-bold">01</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Early Childhood</h3>
+            <p class="text-slate-600 text-sm mb-4">
+              Our Creche, Nursery, and Kindergarten departments focus on
+              play-based learning and cognitive development.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span
+                class="text-[10px] px-2 py-1 bg-white border border-slate-200 rounded-full"
+                >Creche</span
+              >
+              <span
+                class="text-[10px] px-2 py-1 bg-white border border-slate-200 rounded-full"
+                >Nursery</span
+              >
+              <span
+                class="text-[10px] px-2 py-1 bg-white border border-slate-200 rounded-full"
+                >KG 1 & 2</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-50 rounded-3xl p-8 border border-slate-100 hover:shadow-xl transition"
+          >
+            <div
+              class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6"
+            >
+              <span class="text-green-600 font-bold">02</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Primary School</h3>
+            <p class="text-slate-600 text-sm mb-4">
+              Building a strong foundation in literacy, numeracy, and creative
+              arts from Basic 1 to Basic 6.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span
+                class="text-[10px] px-2 py-1 bg-white border border-slate-200 rounded-full"
+                >Lower Primary</span
+              >
+              <span
+                class="text-[10px] px-2 py-1 bg-white border border-slate-200 rounded-full"
+                >Upper Primary</span
+              >
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-50 rounded-3xl p-8 border border-slate-100 hover:shadow-xl transition"
+          >
+            <div
+              class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-6"
+            >
+              <span class="text-green-600 font-bold">03</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3">Junior High (JHS)</h3>
+            <p class="text-slate-600 text-sm mb-4">
+              Intensive preparation for the BECE with a focus on core subjects
+              and technical skills.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span
+                class="text-[10px] px-2 py-1 bg-white border border-slate-200 rounded-full"
+                >JHS 1 - 3</span
+              >
+              <span
+                class="text-[10px] px-2 py-1 bg-white border border-slate-200 rounded-full"
+                >BECE Prep</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mt-10 text-center">
+          <a
+            href="#contact"
+            class="px-6 py-3 bg-slate-900 text-white rounded-xl text-sm font-semibold"
+            >Inquire About Admission</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="py-24 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 overflow-hidden lg:grid lg:grid-cols-2"
+        >
+          <div class="p-8 lg:p-16">
+            <h2 class="text-3xl font-bold mb-8">Admission Inquiry</h2>
+            <form action="#" method="POST" class="space-y-6">
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-semibold text-slate-700 mb-2"
+                    >Guardian Name</label
+                  >
+                  <input
+                    type="text"
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-slate-700 mb-2"
+                    >Phone Number</label
+                  >
+                  <input
+                    type="tel"
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-2"
+                  >Level of Interest</label
+                >
+                <select
+                  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
+                >
+                  <option>Creche / Nursery / KG</option>
+                  <option>Primary School</option>
+                  <option>Junior High School (JHS)</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                class="w-full py-4 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition"
+              >
+                Submit Inquiry
+              </button>
+            </form>
+          </div>
+          <div
+            class="bg-green-600 p-8 lg:p-16 text-white flex flex-col justify-between"
+          >
+            <div>
+              <h3 class="text-2xl font-bold mb-6">Visit Our Campus</h3>
+              <div class="space-y-6">
+                <p>Plot 42, Sethoo, Awoshie last stop,<br />Accra, Ghana</p>
+                <p>+233 24 000 0000</p>
+                <p>info@greenpastures.edu.gh</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="bg-white pt-20 pb-10 border-t border-slate-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-slate-400 text-xs">
+          &copy; <span id="year"></span> Green Pastures School - Ghana. All
+          rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const btn = document.getElementById("mobile-menu-button");
+      const menu = document.getElementById("mobile-menu");
+      btn.addEventListener("click", () => menu.classList.toggle("hidden"));
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
