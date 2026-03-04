@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Local apps
     'app_public',
     'app_account',
+    'app_staff',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +119,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+LOGIN_URL = '/account/login/' 
