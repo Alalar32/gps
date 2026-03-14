@@ -1,227 +1,409 @@
-<!DOCTYPE html>
+{% load static %}
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Staff Portal | Green Pastures</title>
+    <link type="image/jpeg" rel="icon" href="{% static 'icon.jpg' %}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .view-section { display: none; }
-        .view-section.active { display: block; }
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .view-section {
+        display: none;
+      }
+      .view-section.active {
+        display: block;
+      }
     </style>
-</head>
-<body class="bg-slate-50 text-slate-900">
-
+  </head>
+  <body class="bg-slate-50 text-slate-900">
     <div class="min-h-screen flex">
-        <aside class="w-64 bg-green-900 text-white flex flex-col shrink-0 sticky top-0 h-screen">
-            <div class="p-6 border-b border-green-800 flex items-center gap-3">
-                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-bold text-green-900">G</div>
-                <span class="font-bold tracking-tight">Staff Portal</span>
-            </div>
-            
-            <nav class="flex-1 p-4 space-y-2">
-                <button onclick="switchView('students')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 bg-green-800 rounded-xl text-sm font-medium transition">
-                    Manage Students
-                </button>
-                <button onclick="switchView('reports')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-green-800 rounded-xl text-sm font-medium transition">
-                    Academic Reports
-                </button>
-                <button onclick="switchView('attendance')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-green-800 rounded-xl text-sm font-medium transition">
-                    Attendance
-                </button>
-                <button onclick="switchView('schedule')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-green-800 rounded-xl text-sm font-medium transition">
-                    Class Schedule
-                </button>
-            </nav>
-
-            <div class="p-6 bg-green-950 border-t border-green-800">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-full bg-green-700 border-2 border-green-500"></div>
-                    <div class="overflow-hidden text-ellipsis">
-                        <p class="text-xs font-bold truncate">{{user.username}}</p>
-                        <p class="text-[10px] text-green-400">Class Teacher</p>
-                    </div>
-                </div>
-                <a href="{% url 'logout' %}" class="block w-full text-center py-2 bg-green-800 hover:bg-red-600 rounded-lg text-xs font-bold transition">Logout</a>
-            </div>
-        </aside>
-
-        <main class="flex-1 overflow-y-auto">
-            <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20">
-                <h2 id="page-title" class="text-xl font-bold">Manage Students</h2>
-                <div class="flex items-center gap-4">
-                    <div class="relative">
-                        <input type="text" placeholder="Search student..." class="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-green-600 w-64">
-                        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
-                </div>
-            </header>
-
-            <div class="p-8">
-                <div id="students-view" class="view-section active space-y-6">
-                    <div class="flex justify-between items-center">
-                        <p class="text-sm text-slate-500">Currently managing: <span class="font-bold text-slate-900 text-base">Basic 4A</span></p>
-                        <button onclick="openModal()" class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-green-100">+ Add Student</button>
-                    </div>
-
-                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] font-bold">
-                                <tr>
-                                    <th class="px-6 py-4">Name</th>
-                                    <th class="px-6 py-4">Student ID</th>
-                                    <th class="px-6 py-4">Gender</th>
-                                    <th class="px-6 py-4">Guardian Contact</th>
-                                    <th class="px-6 py-4 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="student-list" class="divide-y divide-slate-100">
-                                <tr>
-                                    <td class="px-6 py-4 font-semibold">David Osei</td>
-                                    <td class="px-6 py-4 text-slate-500">GPS/24/0115</td>
-                                    <td class="px-6 py-4 text-slate-500">Male</td>
-                                    <td class="px-6 py-4 text-slate-500">024 455 6677</td>
-                                    <td class="px-6 py-4 text-right">
-                                        <button class="text-green-600 font-bold hover:underline mr-4">Edit</button>
-                                        <button onclick="this.closest('tr').remove()" class="text-red-500 font-bold hover:underline">Remove</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="reports-view" class="view-section space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200">
-                            <h4 class="font-bold mb-4">Input Grades</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Subject</label>
-                                    <select class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                                        <option>Mathematics</option>
-                                        <option>English Language</option>
-                                        <option>Integrated Science</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Student Name</label>
-                                    <input type="text" placeholder="Start typing name..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Class Work (40%)</label>
-                                        <input type="number" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Exam (60%)</label>
-                                        <input type="number" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                                    </div>
-                                </div>
-                                <button class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold">Save Report Entry</button>
-                            </div>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200 flex flex-col items-center justify-center text-center">
-                            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                                <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            </div>
-                            <h4 class="font-bold mb-2">Download Class Reports</h4>
-                            <p class="text-sm text-slate-500 mb-6">Generate and download PDF reports for the entire class.</p>
-                            <button class="px-6 py-2 border-2 border-slate-200 rounded-xl text-sm font-bold hover:bg-slate-50">Generate Batch PDF</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="attendance-view" class="view-section">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="font-bold">Daily Roll Call - Feb 25, 2024</h3>
-                            <button class="text-green-600 font-bold text-sm">Submit Attendance</button>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
-                                <span class="font-medium">David Osei</span>
-                                <div class="flex gap-2">
-                                    <button class="px-3 py-1 bg-green-600 text-white rounded-lg text-xs font-bold">Present</button>
-                                    <button class="px-3 py-1 bg-white border border-slate-200 text-slate-500 rounded-lg text-xs font-bold hover:bg-red-50 hover:text-red-600">Absent</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <div id="modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[2rem] p-8">
-            <h3 class="text-xl font-bold mb-6">Enroll New Student</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Full Name</label>
-                    <input id="new-name" type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">ID Number</label>
-                    <input id="new-id" type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <button onclick="closeModal()" class="py-3 bg-slate-100 text-slate-600 rounded-xl font-bold">Cancel</button>
-                    <button onclick="saveStudent()" class="py-3 bg-green-600 text-white rounded-xl font-bold">Register</button>
-                </div>
-            </div>
+      <aside
+        class="w-64 bg-green-900 text-white flex flex-col shrink-0 sticky top-0 h-screen"
+      >
+        <div class="p-6 border-b border-green-800 flex items-center gap-3">
+          <div
+            class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-bold text-green-900"
+          >
+            G
+          </div>
+          <span class="font-bold tracking-tight">Staff Portal</span>
         </div>
+
+        <nav class="flex-1 p-4 space-y-2">
+          <button
+            onclick="switchView('students')"
+            class="nav-btn w-full flex items-center gap-3 px-4 py-3 bg-green-800 rounded-xl text-sm font-medium transition"
+          >
+            Manage Students
+          </button>
+          <button
+            onclick="switchView('reports')"
+            class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-green-800 rounded-xl text-sm font-medium transition"
+          >
+            Academic Reports
+          </button>
+          <button
+            onclick="switchView('attendance')"
+            class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-green-800 rounded-xl text-sm font-medium transition"
+          >
+            Attendance
+          </button>
+          <button
+            onclick="switchView('schedule')"
+            class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-green-800 rounded-xl text-sm font-medium transition"
+          >
+            Class Schedule
+          </button>
+        </nav>
+
+        <div class="p-6 bg-green-950 border-t border-green-800">
+          <div class="flex items-center gap-3 mb-4">
+            <div
+              class="w-10 h-10 rounded-full bg-green-700 border-2 border-green-500"
+            ></div>
+            <div class="overflow-hidden text-ellipsis">
+              <p class="text-xs font-bold truncate">{{user.username}}</p>
+              <p class="text-[10px] text-green-400">{{user.email}}</p>
+            </div>
+          </div>
+          <a
+            href="{% url 'logout' %}"
+            class="block w-full text-center py-2 bg-green-800 hover:bg-red-600 rounded-lg text-xs font-bold transition"
+            >Logout</a
+          >
+        </div>
+      </aside>
+
+      <main class="flex-1 overflow-y-auto">
+        <header
+          class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20"
+        >
+          <h2 id="page-title" class="text-xl font-bold">Manage Students</h2>
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <input
+                type="text"
+                placeholder="Search student..."
+                class="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-green-600 w-64"
+              />
+              <svg
+                class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </header>
+
+        <div class="p-8">
+          <div id="students-view" class="view-section active space-y-6">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-slate-500">
+                Currently managing:
+                <span class="font-bold text-slate-900 text-base">Basic 4A</span>
+              </p>
+              <button
+                onclick="openModal()"
+                class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-green-100"
+              >
+                + Add Student {{students.count}}
+              </button>
+            </div>
+
+            <div
+              class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm"
+            >
+              <table class="w-full text-left text-sm">
+                <thead
+                  class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] font-bold"
+                >
+                  <tr>
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Student ID</th>
+                    <th class="px-6 py-4">Age</th>
+                    <th class="px-6 py-4">Class</th>
+                    <th class="px-6 py-4">Gender</th>
+                    <th class="px-6 py-4">Parent/Guardian Name</th>
+                    <th class="px-6 py-4">Parent/Guardian Contact</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="student-list" class="divide-y divide-slate-100">
+              {% for student in students %}
+
+                  <tr>
+                    <td class="px-6 py-4 font-semibold">{{ student.first_name }} {{ student.last_name }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.student_id }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.age }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.Class }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.Gender }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.pname }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.pcontact }}</td>
+                    <td class="px-6 py-4 text-right">
+                      <button
+                      onclick="document.getElementById('editstudent-info').classList.add('active');
+  document.getElementById('students-view').classList.remove('active');
+  location.href='{% url 'edit_student' student.student_id %}';"
+                        class="text-green-600 font-bold hover:underline mr-4"
+                      >
+                        Edit
+                      </button>
+                      <a href="{% url 'delete_student' student.student_id %}"
+   class="text-red-500 font-bold hover:underline">
+   Remove
+</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div id="editstudent-info" class="view-section space-y-6">
+            {% for student in students %}
+            <form action="{% url 'edit_student' student.student_id %}" method="POST" class="bg-white p-6 rounded-2xl border border-slate-200">
+              <h3 class="font-bold text-lg mb-4">Edit Student Information</h3>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">First Name</label>
+                  <input name="first_name" id="first_name" type="text" value="{{ student.first_name }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Last Name</label>
+                  <input name="last_name" id="last_name" type="text" value="{{ student.last_name }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Age</label>
+                  <input name="age" id="age" type="number"    value="{{ student.age }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Class</label>
+                  <input name="Class" id="Class" type="text" value="{{ student.Class }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Gender</label>
+                  <input name="Gender" id="Gender" type="text" value="{{ student.Gender }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/ Guardian Name</label>
+                  <input name="pname" id="Pname" type="text" value="{{ student.pname }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/ Guardian Contact</label>
+                  <input name="pcontact" id="Pcontact" type="text" value="{{ student.pcontact }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/Guardian Email</label>
+                  <input name="pemail" id="Pemail" type="email" value="{{ student.pemail }}" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <button type="submit" class="col-span-2 py-3 bg-green-600 text-white rounded-xl font-bold w-full">
+                  Save Changes
+                </button>
+              </div>
+              {% csrf_token %}
+              {% endfor%}
+            </form>
+          </div>
+          <div id="messagespop" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex z-50 items-center justify-center p-4">
+            <div class="bg-white w-full max-w-sm rounded-2xl p-6">
+              {% if messages %}
+                {% for message in messages %}
+                  <p class="text-green-600 font-bold">{{ message }}</p>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+           
+
+          <div id="attendance-view" class="view-section">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200">
+              <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold">Daily Roll Call - Feb 25, 2024</h3>
+                <button class="text-green-600 font-bold text-sm">
+                  Submit Attendance
+                </button>
+              </div>
+              <div class="space-y-3">
+                <div
+                  class="flex items-center justify-between p-4 bg-slate-50 rounded-xl"
+                >
+                  <span class="font-medium">David Osei</span>
+                  <div class="flex gap-2">
+                    <button
+                      class="px-3 py-1 bg-green-600 text-white rounded-lg text-xs font-bold"
+                    >
+                      Present
+                    </button>
+                    <button
+                      class="px-3 py-1 bg-white border border-slate-200 text-slate-500 rounded-lg text-xs font-bold hover:bg-red-50 hover:text-red-600"
+                    >
+                      Absent
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
 
-    <script>
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId + '-view').classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('bg-green-800'));
-            event.currentTarget.classList.add('bg-green-800');
-            
-            const titles = {
-                'students': 'Manage Students',
-                'reports': 'Academic Reports',
-                'attendance': 'Daily Attendance',
-                'schedule': 'Class Schedule'
-            };
-            document.getElementById('page-title').textContent = titles[viewId];
-        }
-
-        function openModal() {
-            document.getElementById('modal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.add('hidden');
-        }
-
-        function saveStudent() {
-            const name = document.getElementById('new-name').value;
-            const id = document.getElementById('new-id').value;
-            if(!name || !id) return;
-
-            const tbody = document.getElementById('student-list');
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="px-6 py-4 font-semibold">${name}</td>
-                <td class="px-6 py-4 text-slate-500">${id}</td>
-                <td class="px-6 py-4 text-slate-500">TBD</td>
-                <td class="px-6 py-4 text-slate-500">Not Provided</td>
-                <td class="px-6 py-4 text-right">
-                    <button class="text-green-600 font-bold hover:underline mr-4">Edit</button>
-                    <button onclick="this.closest('tr').remove()" class="text-red-500 font-bold hover:underline">Remove</button>
-                </td>
-            `;
-            tbody.prepend(row);
-            closeModal();
-            document.getElementById('new-name').value = '';
-            document.getElementById('new-id').value = '';
-        }
-    </script>
+    
+    <div
+      id="modal"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex z-50 items-center justify-center p-4"
+    >
+      <form  action="{% url 'enroll_student' %}" method="POST" class="bg-white w-full  max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl p-8">
+        <h3 class="text-xl font-bold mb-6">Enroll New Student</h3>
+        <div class="space-y-4">
+             <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+              >ID Number</label
+            >
+            <input name="student_id"
+              id="student_id"
+              type="text"
+              class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+              >first Name</label
+            >
+            <input name="first_name"
+              id="first_name"
+              type="text"
+              class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+              >Last Name</label
+            >
+            <input name="last_name"
+              id="last_name"
+              type="text"
+              class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+              >Age</label
+            >
+            <input name="age"
+              id="age"
+              type="number"
+              class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+              >Class</label
+            >
+            <input name="Class"
+              id="Class"
+              type="text"
+              class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+            />
+          </div>
+           <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Gender</label>
+            <input name="Gender" id="Gender" type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/ Guardian Name</label>
+            <input name="pname" id="Pname"  type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+          </div>
+           <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/ Guardian Contact</label>
+            <input name="pcontact" id="Pcontact" type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/Guardian Email</label>
+            <input name="pemail" id="Pemail" type="email" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+            <small id="emailwarning" class="text-red-500 text-xs hidden">Please enter a valid email address.</small>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <button type="button"
+              onclick="closeModal()"
+              class="py-3 bg-slate-100 text-slate-600 rounded-xl font-bold"
+            >
+              Cancel
+            </button>
+            <button type="submit"
+              onclick="saveStudent()"
+              class="py-3 bg-green-600 text-white rounded-xl font-bold"
+            >
+              Register
+            </button>
+          </div>
+        </div>
+         {% csrf_token %}
+      
+        </form>
 </body>
+    <script>
+      setTimeout(() => {
+    const alerts = document.querySelectorAll(".messages.pop");
+    alerts.forEach(alert => {
+      alert.classList.add("hidden");
+    });
+  }, 3000);
+     function openModal() {
+  document.getElementById("modal").classList.remove("hidden");
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.add("hidden");
+}
+
+function saveStudent() {
+  const name =
+    document.getElementById("first_name").value +
+    " " +
+    document.getElementById("last_name").value;
+
+  const id = document.getElementById("student_id").value;
+  const age = document.getElementById("age").value;
+  const studentClass = document.getElementById("Class").value;
+  const gender = document.getElementById("Gender").value;
+  const Pname = document.getElementById("Pname").value;
+  const Pcontact = document.getElementById("Pcontact").value;
+  const Pemail = document.getElementById("Pemail").value;
+  const emailWarning = document.getElementById("emailwarning");
+
+  if (!name || !id || !age || !studentClass || !gender || !Pname || !Pcontact || !Pemail)
+    return alert("Please fill in all fields!");
+
+  if (Pemail && !/\S+@\S+\.\S+/.test(Pemail)) {
+      emailWarning.classList.remove("hidden");
+    return;
+  } else {
+    emailWarning.classList.add("hidden");
+  }  
+
+}
+{% for student in students %}
+function editstudentinfo(){
+  document.getElementById('editstudent-info').classList.add('active');
+  document.getElementById('students-view').classList.remove('active');
+  location.href='{% url 'edit_student' student.student_id %}';
+}
+{% endfor %}
+    </script>
+ 
 </html>

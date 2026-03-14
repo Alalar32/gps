@@ -118,6 +118,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
-LOGIN_URL = '/account/login/' 
+
+STATIC_URL = '/static/'
+
+LOGIN_URL = '/account/login/'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.hostinger.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'hello@caremanagementhub.co.uk'
+EMAIL_HOST_PASSWORD = 'Welcome@1'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'hello@caremanagementhub.co.uk'
+# SERVER_EMAIL = 'hello@caremanagementhub.co.uk'
