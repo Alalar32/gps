@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from .models import Person
 from django.contrib import messages
+from django.db.models import Q
 @login_required
 
 
@@ -9,7 +10,12 @@ from django.contrib import messages
 def dashboard_view(request):
     students = Person.objects.all()
     
-    return render(request, 'app_staff/dashboard.html', {'students': students,})
+    if request.method == "GET":
+        search_query = request.GET.get('search', '')
+        if search_query:
+            students = students.filter(Q(first_name__icontains=search_query) | Q(last_name__icontains=search_query) | Q(student_id__icontains=search_query))
+            return render(request, 'app_staff/dashboard.html', {'students': students})
+    return render(request, 'app_staff/dashboard.html', {'students': students,'search_query': search_query})
 
 def enroll_student(request):
     if request.method == "POST":
@@ -35,17 +41,12 @@ def enroll_student(request):
         )
         if Person.objects.filter(student_id=student_id).exists():
             messages.error(request, "Student with this ID already exists.")
-            return render(request, 'app_staff/dashboard.html', {'students': Person.objects.all(),}, {'messages': messages})
+            return redirect('/staff/dashboard')
         else:
             s.save()
-        # print(request.POST)
-        # students = Person.objects.all()
-
-        
             messages.success(request, "Student enrolled successfully!")
-
-    # messages.success(request, message)
-            return render(request, 'app_staff/dashboard.html', {'students': Person.objects.all(),}, {'messages': messages})
+            return redirect('/staff/dashboard')
+    return render(request, 'app_staff/dashboard.html')
     
 
 def delete_student(request, student_id):
@@ -55,7 +56,7 @@ def delete_student(request, student_id):
         messages.success(request, "Student deleted successfully!")
     else:
         messages.error(request, "Student not found.")
-    return render(request, 'app_staff/dashboard.html', {'students': Person.objects.all(),})
+    return redirect( '/staff/dashboard')
 
 def edit_student(request, student_id):
     student = Person.objects.get(student_id=student_id)
@@ -70,5 +71,17 @@ def edit_student(request, student_id):
         student.pcontact = request.POST.get('pcontact')
         student.pemail = request.POST.get('pemail')
         student.save()
+        
         messages.success(request, "Student information updated successfully!")
-    return render(request, 'app_staff/dashboard.html', {'students': Person.objects.all(),})
+        return redirect('/staff/dashboard')
+    
+    return render(request, 'app_staff/editstudent.html', {'students': Person.objects.filter(student_id=student_id), 'student': student,})
+
+def class_schedule_view(request):
+    return render(request, 'app_staff/class_schedule.html')
+
+def attendance_view(request):
+    return render(request, 'app_staff/attendance.html')
+
+def reports_view(request):
+    return render(request, 'app_staff/reports.html')

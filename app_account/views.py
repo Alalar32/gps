@@ -6,6 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your views here.
 def login_view(request):
@@ -33,30 +34,40 @@ def forgotpassword_view(request):
     if request.method == "POST":
         email = request.POST.get('email')
 
-        # send_mail("Password Reset Request", "Hello user, you have requested a password reset.", None, [email])
-        # return render(request, 'app_account/forgot_password.html', {'message': 'Password reset email sent!'})
-        name=User.objects.filter(email=email).first()
-        if not name:
-            return render(request, 'app_account/forgot_password.html', {'error': 'No user found with this email address.'})
-        
-        # 1. Create email
+        user = User.objects.filter(email=email).first()
+
+        if not user:
+            messages.error(request, 'No user found with this email address.')
+            return redirect('forgot_password')
+
+        # Create reset URL
         reset_url = request.build_absolute_uri(reverse("reset_password"))
+
+        # Render email template
         html_content = render_to_string(
             'app_account/resetpassword_email.html',
-            {"reset_url": reset_url, "name": name.first_name or name.username},
+            {
+                "reset_url": reset_url,
+                "name": user.first_name or user.username
+            }
         )
-        
-        msg = EmailMultiAlternatives(
-                'Password Reset Request',
-                'Hello user, you have requested a password reset.',
-                None,
-                [email],
-        )
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
 
-       
-        return render(request, 'app_account/forgot_password.html', {'message': 'Password reset email sent!'})
+        try:
+            msg = EmailMultiAlternatives(
+                'Password Reset Request',
+                'Click the link to reset your password.',
+                settings.EMAIL_HOST_USER,  
+                [email],
+            )
+            msg.attach_alternative(html_content, "text/html")
+            msg.send(fail_silently=False)
+
+            messages.success(request, 'Password reset email sent!')
+
+        except Exception as e:
+            print("EMAIL ERROR:", e)  
+            messages.error(request, 'Failed to send email. Try again.')
+            return redirect('forgot_password')
 
         
 
@@ -66,9 +77,13 @@ def resetpassword_view(request):
     if request.method == "POST":
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
+        current_password = request.POST.get('current_password')
 
         if new_password == confirm_password:
-            #i will write the logic to change the password later 
+            user = User.objects.filter(current_password=request.user.password).first()
+            user.set_password(new_password)
+            user.save()
+            
             messages.success(request, 'Password reset successful!')
             return redirect('login')
         else:

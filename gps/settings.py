@@ -58,7 +58,7 @@ ROOT_URLCONF = 'gps.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,14 +125,16 @@ STATIC_URL = '/static/'
 
 LOGIN_URL = '/account/login/'
 
+TAILWIND_APP_NAME = 'theme'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.hostinger.com'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = 'hello@caremanagementhub.co.uk'
-EMAIL_HOST_PASSWORD = 'Welcome@1'
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'hello@caremanagementhub.co.uk'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'dotseelijah0@gmail.com'
+EMAIL_HOST_PASSWORD = 'hfup dxyf difg zzze'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = 'dotseelijah0@gmail.com'
 # SERVER_EMAIL = 'hello@caremanagementhub.co.uk'

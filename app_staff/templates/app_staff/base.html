@@ -1,0 +1,244 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Portal | Green Pastures</title>
+    <link type="image/jpeg" rel="icon" href="{% static 'icon.jpg' %}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .view-section {
+        display: none;
+      }
+      .view-section.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <div class="min-h-screen flex">
+      <aside
+        class="w-64 bg-green-900 text-white flex flex-col shrink-0 sticky top-0 h-screen"
+      >
+        <div class="p-6 border-b border-green-800 flex items-center gap-3">
+          <div
+            class="w-8 h-8 bg-white rounded-lg flex items-center justify-center font-bold text-green-900"
+          >
+            G
+          </div>
+          <span class="font-bold tracking-tight">Staff Portal</span>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-1.5">
+          <a
+            href="{% url 'staff_dashboard' %}"
+            class="nav-btn active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+              ></path>
+            </svg>
+            Manage Students
+          </a>
+          <a
+            href="{% url 'reports' %}"
+            class="nav-btn w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl text-sm font-semibold transition-all duration-200"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+            Academic Reports
+          </a>
+          <a
+            href="{% url 'attendance' %}"
+            class="nav-btn w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl text-sm font-semibold transition-all duration-200"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
+            </svg>
+            Attendance
+          </a>
+          <a
+            href="{% url 'class_schedule' %}"
+            class="nav-btn w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl text-sm font-semibold transition-all duration-200"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
+            </svg>
+            Class Schedule
+          </a>
+        </nav>
+
+        <div class="p-6 bg-green-950 border-t border-green-800">
+          <div class="flex items-center gap-3 mb-4">
+            <div
+              class="w-10 h-10 rounded-full bg-green-700 border-2 border-green-500"
+            ></div>
+            <div class="overflow-hidden text-ellipsis">
+              <p class="text-xs font-bold truncate">{{user.username}}</p>
+              <p class="text-[10px] text-green-400">{{user.email}}</p>
+            </div>
+          </div>
+          <a
+            href="{% url 'logout' %}"
+            class="block w-full text-center py-2 bg-green-800 hover:bg-red-600 rounded-lg text-xs font-bold transition"
+            >Logout</a
+          >
+        </div>
+      </aside>
+      <div class="flex-1 flex flex-col">
+        <header
+          class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20"
+        >
+          <h2 id="page-title" class="text-xl font-bold">
+            {% block title %}{% endblock %}
+          </h2>
+          <div class="flex items-center gap-4">
+            {% block search %}{% endblock search %}
+          </div>
+        </header>
+        <main class="flex-1 overflow-y-auto p-8">
+          {% block content %}{% endblock %}
+        </main>
+      </div>
+    </div>
+
+
+
+
+     <div
+      id="modal"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex z-50 items-center justify-center p-4"
+    >
+            <form  action="{% url 'enroll_student' %}" method="POST" class="bg-white w-full  max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl p-8">
+              <h3 class="text-xl font-bold mb-6">Enroll New Student</h3>
+              <div class="space-y-4">
+                  <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+                    >ID Number</label
+                  >
+                  <input name="student_id"
+                    id="student_id"
+                    type="text"
+                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+                    >first Name</label
+                  >
+                  <input name="first_name"
+                    id="first_name"
+                    type="text"
+                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+                    >Last Name</label
+                  >
+                  <input name="last_name"
+                    id="last_name"
+                    type="text"
+                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+                    >Age</label
+                  >
+                  <input name="age"
+                    id="age"
+                    type="number"
+                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2"
+                    >Class</label
+                  >
+                  <input name="Class"
+                    id="Class"
+                    type="text"
+                    class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Gender</label>
+                  <input name="Gender" id="Gender" type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/ Guardian Name</label>
+                  <input name="pname" id="Pname"  type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/ Guardian Contact</label>
+                  <input name="pcontact" id="Pcontact" type="text" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Parent/Guardian Email</label>
+                  <input name="pemail" id="Pemail" type="email" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl" />
+                  <small id="emailwarning" class="text-red-500 text-xs hidden">Please enter a valid email address.</small>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                  <button type="button"
+                    onclick="closeModal()"
+                    class="py-3 bg-slate-100 text-slate-600 rounded-xl font-bold"
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit"
+
+                    class="py-3 bg-green-600 text-white rounded-xl font-bold"
+                  >
+                    Register
+                  </button>
+                  </div>
+                </div>
+  </body>
+  {% block scripts %}{% endblock %}
+</html>

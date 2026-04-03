@@ -1,0 +1,63 @@
+          <div id="students-view" class="view-section active space-y-6">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-slate-500">
+                Currently managing:
+                <span class="font-bold text-slate-900 text-base">Basic 4A</span>
+              </p>
+              <button
+                onclick="openModal()"
+                class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-green-100"
+              >
+                + Add Student {{students.count}}
+              </button>
+            </div>
+
+            <div
+              class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm"
+            >
+              <table class="w-full text-left text-sm">
+                <thead
+                  class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] font-bold"
+                >
+                  <tr>
+                    <th class="px-6 py-4">Name</th>
+                    <th class="px-6 py-4">Student ID</th>
+                    <th class="px-6 py-4">Age</th>
+                    <th class="px-6 py-4">Class</th>
+                    <th class="px-6 py-4">Gender</th>
+                    <th class="px-6 py-4">Parent/Guardian Name</th>
+                    <th class="px-6 py-4">Parent/Guardian Contact</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="student-list" class="divide-y divide-slate-100">
+              {% for student in students %}
+
+                  <tr>
+                    <td class="px-6 py-4 font-semibold">{{ student.first_name }} {{ student.last_name }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.student_id }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.age }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.Class }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.Gender }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.pname }}</td>
+                    <td class="px-6 py-4 text-slate-500">{{ student.pcontact }}</td>
+                    <td class="px-6 py-4 text-right">
+                      <button
+                      onclick="
+                      location.href='{% url 'edit_student' student.student_id %}';"
+                                            class="text-green-600 font-bold hover:underline mr-4"
+                                          >
+                                            Edit
+                                          </button>
+                                          <a href="{% url 'delete_student' student.student_id %}"
+                      class="text-red-500 font-bold hover:underline">
+                      Remove
+                    </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+        </div>

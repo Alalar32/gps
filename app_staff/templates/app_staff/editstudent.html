@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Student | Green Pastures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .form-card {
+        animation: slideUp 0.4s ease-out;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-900 min-h-screen">
+    <div class="max-w-4xl mx-auto py-12 px-6">
+      <div class="flex items-center justify-between mb-10">
+        <div>
+          {% for student in students %}
+
+          <a
+            href="{% url 'staff_dashboard' %}"
+            class="inline-flex items-center text-sm font-bold text-slate-400 hover:text-green-600 transition-colors mb-4"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              ></path>
+            </svg>
+            Back to Dashboard
+          </a>
+          <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Edit Student Profile
+          </h1>
+          <p class="text-slate-500 mt-1">
+            Updating records for
+            <span class="text-green-600 font-semibold"
+              >{{ student.first_name }} {{ student.last_name }}</span
+            >
+            ({{ student.student_id }})
+          </p>
+        </div>
+        <div class="hidden sm:block">
+          <div
+            class="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center text-green-600 font-bold text-2xl shadow-inner"
+          >
+            DO
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden form-card"
+      >
+        <form
+          action="{% url 'edit_student' student.student_id %}"
+          method="POST"
+          class="p-10 space-y-10"
+        >
+          <section>
+            <div class="flex items-center gap-3 mb-6">
+              <span
+                class="w-8 h-8 rounded-lg bg-green-600 text-white flex items-center justify-center text-xs font-bold"
+                >01</span
+              >
+              <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+                Personal Information
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label
+                  class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                  >First Name</label
+                >
+                <input
+                  type="text"
+                  name="first_name"
+                  value="{{ student.first_name }}"
+                  required
+                  class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                  >Last Name</label
+                >
+                <input
+                  name="last_name"
+                  type="text"
+                  value="{{ student.last_name }}"
+                  required
+                  class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 outline-none transition-all"
+                />
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label
+                    class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                    >Age</label
+                  >
+                  <input
+                    type="number"
+                    name="age"
+                    value="{{ student.age }}"
+                    required
+                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label
+                    class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                    >Gender</label
+                  >
+                  <select
+                    name="Gender"
+                    class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 outline-none transition-all"
+                  >
+                    <option
+                      {%
+                      if
+                      student.Gender=""
+                      ="Male"
+                      %}selected{%
+                      endif
+                      %}
+                    >
+                      Male
+                    </option>
+                    <option
+                      {%
+                      if
+                      student.Gender=""
+                      ="Female"
+                      %}selected{%
+                      endif
+                      %}
+                    >
+                      Female
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label
+                  class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                  >Assign Class</label
+                >
+                <input
+                  type="text"
+                  name="Class"
+                  value="{{ student.Class }}"
+                  required
+                  class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 outline-none transition-all"
+                />
+              </div>
+            </div>
+          </section>
+
+          <div class="border-t border-slate-100"></div>
+
+          <section>
+            <div class="flex items-center gap-3 mb-6">
+              <span
+                class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs font-bold"
+                >02</span
+              >
+              <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+                Guardian Contact Details
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="md:col-span-2">
+                <label
+                  class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                  >Guardian Full Name</label
+                >
+                <input
+                  type="text"
+                  name="pname"
+                  value="{{ student.pname }}"
+                  required
+                  class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                  >Guardian Phone</label
+                >
+                <input
+                  type="tel"
+                  name="pcontact"
+                  value="{{ student.pcontact }}"
+                  required
+                  class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2"
+                  >Guardian Email</label
+                >
+                <input
+                  type="email"
+                  name="pemail"
+                  value="{{ student.pemail }}"
+                  required
+                  class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 outline-none transition-all"
+                />
+              </div>
+            </div>
+          </section>
+          {% csrf_token %}
+
+          <div class="flex items-center gap-4 pt-6">
+            <button
+              type="submit"
+              class="flex-1 py-4 bg-green-600 text-white rounded-2xl font-bold hover:bg-green-700 transition-all shadow-xl shadow-green-100"
+            >
+              Save Updated Records
+            </button>
+            <a
+              href="{% url 'staff_dashboard' %}"
+              class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+            >
+              Discard Changes
+            </a>
+          </div>
+          {% endfor %}
+        </form>
+      </div>
+
+      <div class="mt-8 text-center">
+        <p class="text-xs text-slate-400 font-medium italic">
+          Last updated by Admin on Feb 25, 2024 at 10:15 AM
+        </p>
+      </div>
+    </div>
+
+    <div
+      id="toast"
+      class="hidden fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl font-bold flex items-center gap-3 animate-bounce"
+    >
+      <svg
+        class="w-6 h-6 text-green-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
+        ></path>
+      </svg>
+      Student Record Synchronized!
+    </div>
+
+    <script>
+      function handleUpdate(e) {
+          e.preventDefault();
+          const toast = document.getElementById('toast');
+          toast.classList.remove('hidden');
+
+          setTimeout(() => {
+              window.location.href = '{% url 'staff_dashboard' %}';
+          }, 1500);
+      }
+    </script>
+  </body>
+</html>
