@@ -1,0 +1,240 @@
+{% extends 'app_staff/base.html' %}
+ {% block content %}
+<div class="flex h-screen bg-slate-100">
+  <main class="flex-1 h-screen overflow-y-auto">
+    <header
+      class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20"
+    >
+      <h1 class="text-xl font-bold">Reports Dashboard</h1>
+      <div class="text-sm text-slate-500 hidden sm:block">
+        Academic Year: 2023/2024
+      </div>
+    </header>
+
+    <div class="p-4 md:p-8 space-y-6">
+      <div
+        class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm space-y-4"
+      >
+        <div class="flex items-center gap-2 mb-2">
+          <svg
+            class="w-4 h-4 text-green-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+            ></path>
+          </svg>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">
+            Filter Records
+          </h2>
+        </div>
+
+          <div>
+            <form method="get" action="{% url 'create_report' %}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+  <div>
+    <label class="block text-sm font-medium text-slate-600 mb-1">Class</label>
+    <select name="class"
+      class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-600/20 focus:outline-none">
+      
+      <option value="">All Classes</option>
+      {% for class in classes %}
+        <option value="{{ class.id }}" {% if class.id|stringformat:"s" == request.GET.class %}selected{% endif %}>
+          {{ class.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-slate-600 mb-1">Term</label>
+    <select name="term"
+      class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-600/20 focus:outline-none">
+      <option value="">All Terms</option>
+      {% for label, term in terms %}
+        <option value="{{ term }}" {% if term == request.GET.term %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Subject -->
+  <div>
+    <label class="block text-sm font-medium text-slate-600 mb-1">Subject</label>
+    <select name="subject"
+      class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-600/20 focus:outline-none">
+      
+      <option value="">All Subjects</option>
+      {% for subject in subjects %}
+        <option value="{{ subject.id }}" {% if subject.id|stringformat:"s" == request.GET.subject %}selected{% endif %}>
+          {{ subject.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Button -->
+  <div>
+    <button type="submit"
+      class="w-full bg-green-600 text-white py-3 rounded-xl text-sm font-semibold hover:bg-green-700 transition">
+      Apply Filter
+    </button>
+  </div>
+
+</form>
+
+      
+      <div
+        class=" bg-white my-4 rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden"
+      >
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead
+              class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] font-bold"
+            >
+              <tr>
+                <th class="px-6 py-5">Student Name</th>
+                <th class="px-6 py-5">Class</th>
+                <th class="px-6 py-5 text-center">Classwork</th>
+                <th class="px-6 py-5 text-center">Exams</th>
+                <th class="px-6 py-5 text-center">Grade</th>
+                <th class="px-6 py-5 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="reports-tbody" class="divide-y divide-slate-100">
+              
+              {% for student in students %}
+              
+
+              <tr id="student-{{ student.id }}">
+                <form method="post" action="." class="divide-y divide-slate-100">
+                  {% csrf_token %}
+                <td class="px-6 py-5">{{ student.first_name }} {{ student.last_name }}
+                </td>
+                <input type="hidden" name="term" value="{{ request.GET.term }}">
+                <input type="hidden" name="subject" value="{{ request.GET.subject }}">
+                <input type="hidden" name="student" value="{{ student.id }}">
+                <td class="px-6 py-5">{{ student.Class.name }}</td>
+                <td class="px-6 py-5 text-center"><input name="classwork" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-600/20 focus:outline-none" value="{{ student.report.classwork }}" ></td>
+                <td class="px-6 py-5 text-center"><input name="exams" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-600/20 focus:outline-none" value="{{ student.report.exams }}" ></td>
+                <td class="px-6 py-5 text-center font-bold text-green-600">{{ student.report.grade }}</td>
+                <td class="px-6 py-5 text-right">
+                  <button
+                    type="submit"
+                    class="mt-4 w-full bg-green-600 text-white py-3 rounded-xl text-sm font-semibold hover:bg-green-700 transition"
+                  >
+                    Save
+                  </button>
+                </td>
+                </form>
+              </tr>
+              {% endfor %}
+              
+            </tbody>
+          </table>
+          
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Report Preview Modal -->
+<div
+  id="report-modal"
+  class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 items-center justify-center p-4"
+>
+  <div
+    class="bg-white w-full max-w-2xl rounded-[2.5rem] p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+  >
+    <div class="flex justify-between items-start mb-6">
+      <div>
+        <h3 class="text-2xl font-bold" id="modal-student-name">
+          Student Report
+        </h3>
+        <p class="text-sm text-slate-500" id="modal-student-id">
+          ID: GPS/24/0000
+        </p>
+      </div>
+      <button
+        onclick="closeModal()"
+        class="p-2 hover:bg-slate-100 rounded-full transition text-slate-400"
+      >
+        &times;
+      </button>
+    </div>
+
+    <div class="space-y-6">
+      <!-- Mock Results Grid -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="bg-green-50 p-4 rounded-2xl">
+          <p class="text-[10px] font-bold text-green-600 uppercase">Average</p>
+          <p class="text-xl font-bold text-green-900" id="modal-avg">0%</p>
+        </div>
+        <div class="bg-blue-50 p-4 rounded-2xl">
+          <p class="text-[10px] font-bold text-blue-600 uppercase">
+            Attendance
+          </p>
+          <p class="text-xl font-bold text-blue-900">98%</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-2xl">
+          <p class="text-[10px] font-bold text-purple-600 uppercase">
+            Position
+          </p>
+          <p class="text-xl font-bold text-purple-900" id="modal-pos">1st</p>
+        </div>
+      </div>
+
+      <div class="border border-slate-100 rounded-2xl overflow-hidden">
+        <table class="w-full text-xs text-left">
+          <thead class="bg-slate-50 font-bold">
+            <tr>
+              <th class="px-4 py-3">Subject</th>
+              <th class="px-4 py-3 text-center">Score</th>
+              <th class="px-4 py-3 text-right">Grade</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-50">
+            <tr>
+              <td class="px-4 py-3">Mathematics</td>
+              <td class="px-4 py-3 text-center">88</td>
+              <td class="px-4 py-3 text-right font-bold text-green-600">A</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3">English Language</td>
+              <td class="px-4 py-3 text-center">76</td>
+              <td class="px-4 py-3 text-right font-bold text-green-600">B+</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3">Science</td>
+              <td class="px-4 py-3 text-center">92</td>
+              <td class="px-4 py-3 text-right font-bold text-green-600">A</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-8 flex gap-3">
+      <button
+        onclick="window.print()"
+        class="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition"
+      >
+        Print PDF
+      </button>
+      <button
+        onclick="closeModal()"
+        class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+ {% endblock %}

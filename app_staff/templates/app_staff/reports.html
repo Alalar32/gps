@@ -1,120 +1,148 @@
-{% extends "app_staff/base.html" %} {% block title %}Generate Reports{% endblock %}
-{% block content %}
-  <div id="reports-view" class=" space-y-6">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div
-        class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm"
-      >
-        <h4
-          class="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2"
-        >
-          <span class="w-2 h-6 bg-green-600 rounded-full"></span>
-          Input Academic Grades
-        </h4>
-        <div class="space-y-5">
-          <div>
-            <label
-              class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2"
-              >Select Subject</label
-            >
-            <select
-              class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 transition-all outline-none"
-            >
-              <option>Mathematics</option>
-              <option>English Language</option>
-              <option>Integrated Science</option>
-              <option>Social Studies</option>
-            </select>
-          </div>
-          <div>
-            <label
-              class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2"
-              >Student Name</label
-            >
-            <input
-              type="text"
-              placeholder="Start typing student name..."
-              class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 transition-all outline-none"
-            />
-          </div>
-          <div class="grid grid-cols-2 gap-6">
-            <div>
-              <label
-                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2"
-                >Class Work (40%)</label
-              >
-              <input
-                type="number"
-                placeholder="0-40"
-                class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 transition-all outline-none"
-              />
-            </div>
-            <div>
-              <label
-                class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2"
-                >Exam (60%)</label
-              >
-              <input
-                type="number"
-                placeholder="0-60"
-                class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600/10 focus:border-green-600 transition-all outline-none"
-              />
-            </div>
-          </div>
-          <button
-            class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all shadow-xl shadow-slate-200"
-          >
-            Save Progress Report
-          </button>
-        </div>
+{% extends 'app_staff/base.html' %}
+ {% block content %}
+<div class="flex h-screen bg-slate-100">
+  <main class="flex-1 h-screen overflow-y-auto">
+    <header
+      class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-20"
+    >
+      <h1 class="text-xl font-bold">Reports Dashboard</h1>
+      <div class="text-sm text-slate-500 hidden sm:block">
+        Academic Year: 2023/2024
       </div>
-      <div class="space-y-6">
-        <div
-          class="bg-green-600 p-8 rounded-[2rem] text-white shadow-xl shadow-green-100 flex flex-col justify-between h-full"
-        >
-          <div>
-            <div
-              class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-6"
-            >
-              <svg
-                class="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                ></path>
-              </svg>
-            </div>
-            <h4 class="text-xl font-bold mb-2">Batch Report Generator</h4>
-            <p class="text-green-50 text-sm leading-relaxed mb-8 opacity-90">
-              Ready to conclude the term? Generate complete PDF report cards for
-              all students in Basic 4A with one click.
-            </p>
-          </div>
-          <button
-            class="w-full py-4 bg-white text-green-700 rounded-xl font-bold hover:bg-green-50 transition-all shadow-lg"
+    </header>
+
+    <div class="p-4 md:p-8 space-y-6">
+      <div
+        class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm space-y-4"
+      >
+        <div class="flex items-center gap-2 mb-2">
+          <svg
+            class="w-4 h-4 text-green-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            Download All Reports (.ZIP)
-          </button>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+            ></path>
+          </svg>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">
+            Filter Records
+          </h2>
+        </div>
+
+          <div>
+            <form method="get" action="{% url 'create_report' %}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+  <div>
+    <label class="block text-sm font-medium text-slate-600 mb-1">Class</label>
+    <select name="class"
+      class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-600/20 focus:outline-none">
+      
+      <option value="">All Classes</option>
+      {% for class in classes %}
+        <option value="{{ class.id }}" {% if class.id|stringformat:"s" == request.GET.class %}selected{% endif %}>
+          {{ class.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-slate-600 mb-1">Term</label>
+    <select name="term"
+      class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-600/20 focus:outline-none">
+      <option value="">All Terms</option>
+      {% for label, term in terms %}
+        <option value="{{ term }}" {% if term == request.GET.term %}selected{% endif %}>
+          {{ label }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium text-slate-600 mb-1">Subject</label>
+    <select name="subject"
+      class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-600/20 focus:outline-none">
+      
+      <option value="">All Subjects</option>
+      {% for subject in subjects %}
+        <option value="{{ subject.id }}" {% if subject.id|stringformat:"s" == request.GET.subject %}selected{% endif %}>
+          {{ subject.name }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <button type="submit"
+      class="w-full bg-green-600 text-white py-3 rounded-xl text-sm font-semibold hover:bg-green-700 transition">
+      Apply Filter
+    </button>
+  </div>
+
+</form>
+
+     
+      <div
+        class="my-4 bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden"
+      >
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead
+              class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] font-bold"
+            >
+              <tr>
+                <th class="px-6 py-5">Student Name</th>
+                <th class="px-6 py-5">Class</th>
+                <th class="px-6 py-5 text-center">Classwork</th>
+                <th class="px-6 py-5 text-center">Exams</th>
+                <th class="px-6 py-5 text-center">Grade</th>
+                <th class="px-6 py-5 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="reports-tbody" class="divide-y divide-slate-100">
+              {% for report in reports %}
+              <form method="post" action="{% url 'edit_report' report.id %}">
+              {% csrf_token %}
+              <tr>
+                <td class="px-6 py-5">{{ report.student.first_name }} {{ report.student.last_name }}</td>
+                <td class="px-6 py-5">{{ report.student.Class.name }}</td>
+                <td class="px-6 py-5 text-center">{{ report.classwork }}</td>
+                <td class="px-6 py-5 text-center">{{ report.exam }}</td>
+                <td class="px-6 py-5 text-center font-bold text-green-600">{{ report.grade }}</td>
+                <td class="px-6 py-5 text-right">
+                  <a
+                    href="{% url 'edit_report' report.id %}"
+                    class="text-blue-600 font-bold hover:underline"
+                  >
+                    Update Report
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const navButtons = document.querySelectorAll(".nav-btn");
-      navButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-          navButtons.forEach((btn) => btn.classList.remove("active"));
-          this.classList.add("active");
-        });
-      });
-    });
-  </script>
-  {% endblock %}
-</main>
+  </main>
+</div>
+
+
+ {% endblock %}
+ {% block scripts %}
+ <script>
+
+     function openreport() {
+                 
+                 modal=document.getElementById('report-modal');
+                 modal.toggle('hidden');
+             }
+             
+ </script>
+ {% endblock %}

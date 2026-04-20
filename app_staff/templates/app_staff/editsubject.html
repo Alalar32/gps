@@ -1,0 +1,30 @@
+{% extends "app_staff/base.html" %}
+{% block pagetitle %}Edit Teacher{% endblock %}
+{% block title %}Staff Portal{% endblock %}
+{% block content %}
+<div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex z-50 items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-green-900">Edit Subject Info</h3>
+                <a href="{% url 'manage_subjects' %}" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></a>
+            </div>
+            <form action="." method="POST" class="bg-white p-6 rounded-2xl border border-slate-200" >
+            <div class="p-6 space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Edit Name</label>
+                    <input type="text" name="name" value="{{ subject.name }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Edit Code</label>
+                    <input type="text" name="code" value="{{ subject.code }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <a href="{% url 'manage_subjects' %}" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-50 transition">Discard</a>
+                    <button type="submit" class="flex-1 px-4 py-2.5 bg-green-900 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-100 transition">Save Changes</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    {% endblock %}

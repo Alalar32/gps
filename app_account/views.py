@@ -24,6 +24,35 @@ def login_view(request):
     
     return render(request, 'app_account/login.html')
 
+def register_view(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confpassword = request.POST.get('confirm_password')
+        
+        if password != confpassword:
+            messages.error(request, 'Passwords do not match. Please try again.')
+            return redirect('register')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists. Please choose a different one.')
+            return redirect('register')
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already registered. Please use a different email.')
+            return redirect('register')
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
+
+        messages.success(request, 'Registration successful! You can now log in.')
+        return redirect('login')
+
+    return render(request, 'app_account/register.html', {
+        'old_data': request.POST,
+    })
+
 def logout_view(request):
     logout(request)
     

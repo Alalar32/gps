@@ -1,0 +1,155 @@
+{% extends "app_staff/base.html" %}
+{% block pagetitle %}Manage Teachers{% endblock %}
+{% block title %}Staff Portal{% endblock %}
+{% block search %}
+                  <div class="relative">
+                  <form id="Form" action="." method="GET">
+                  <input
+                    type="text"
+                    name="search"
+                    id="searchInput"
+                    onkeyup="searchteachers()"
+                    value="{{ request.GET.search }}"
+                    placeholder="Search teacher..."
+                    class="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-green-600 w-64"
+                  />
+                  <svg
+                    class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    >
+                  </path>
+                  </svg>
+            </div>
+          
+        </form>{% endblock search %}
+        {% block content %}
+<div  class="space-y-6">
+  <div class="flex justify-between items-center">
+    <p class="text-sm text-slate-500">
+      Total Teachers:
+      <span class="font-bold text-slate-900 text-base">{{ teachers.count }} </span>
+    </p>
+    <button onclick="openModal()"
+      class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-green-100"
+    >
+      + Add Teacher
+    </button>
+  </div>
+  <div
+    class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm"
+  >
+    <table class="w-full text-left text-sm">
+      <thead
+        class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase text-[10px] font-bold"
+      >
+        <tr>
+          <th class="px-6 py-4">Staff Name</th>
+          <th class="px-6 py-4">subject</th>
+          <th class="px-6 py-4">Status</th>
+          <th class="px-6 py-4 text-right">Actions</th>
+        </tr>
+      </thead>
+      {% for teacher in teachers %}
+      <tbody class="divide-y divide-slate-100">
+        <tr>
+          <td class="px-6 py-4 font-semibold">{{ teacher.first_name }}  {{ teacher.last_name }}</td>
+          <td class="px-6 py-4 text-slate-500">{{ teacher.subject.code }}|{{ teacher.subject.name }}</td>
+          <td class="px-6 py-4 text-green-600 font-medium"{%if teacher.status == 'INACTIVE'%} style="color: red;"{%endif%}>{{ teacher.status }}</td>
+          <td class="px-6 py-4 text-right">
+            <a href="{% url 'edit_teachers' teacher.id %}" class="text-green-600 font-bold hover:underline mr-4">
+              Edit
+            </a>
+            <a href="{% url 'delete_teacher' teacher.id %}" class="text-red-500 font-bold hover:underline">
+              Remove
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+ <div id="modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex z-50 items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Add New Teacher</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <form action="." method="POST" class="bg-white p-6 rounded-2xl border border-slate-200" > 
+                    {% csrf_token %}
+                    <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Teacher ID</label>
+                    <input type="text" name="teacher_id" placeholder="e.g. TCH12345" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">First Name</label>
+                    <input type="text" name="first_name" placeholder="e.g. Samuel " class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Last Name</label>
+                    <input type="text" name="last_name" placeholder="e.g. Addo" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                </div>
+                {% comment %} <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Age</label>
+                    <input type="number" name="age" placeholder="e.g. 35" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                </div> {% endcomment %}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Subject</label>
+                    <select name="subject" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                    <option value="" disabled selected>Select Subject</option>
+                      {% for subject in subjects %}
+                      <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button onclick="toggleModal()" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl font-bold text-sm">Cancel</button>
+                    <button type="submit" class="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-xl font-bold text-sm">Save Teacher</button>
+                </div>
+            </div>
+        </div></form>
+    </div>
+
+    
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function toggleModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.toggle('hidden');
+        }
+        function openModal() {
+              document.getElementById("modal").classList.remove("hidden");
+            }
+
+            function closeModal() {
+              document.getElementById("modal").classList.add("hidden");
+            }
+
+            function searchteachers(){
+              const query = document.getElementById("searchInput").value;
+              if(query){
+                document.getElementById("Form").submit();
+                const input = document.getElementById("searchInput");
+                if (input) {
+                  input.focus();
+                }
+              }
+            }
+
+    </script>
+{% endblock %}

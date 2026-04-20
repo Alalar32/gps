@@ -1,0 +1,63 @@
+{% extends "app_staff/base.html" %}
+{% block pagetitle %}Edit Teacher{% endblock %}
+{% block title %}Staff Portal{% endblock %}
+{% block content %}
+ <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex z-50 items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                <div>
+                    <h3 class="text-lg font-bold text-green-900">Edit Teacher Details</h3>
+                    <p class="text-xs text-slate-500 font-medium">Updating profile for {{ teacher.first_name }} {{ teacher.last_name }}</p>
+                </div>
+                <a href="{% url 'manage_teachers' %}" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></a>
+            </div>
+            <form action="." method="POST" class="bg-white p-6 rounded-2xl border border-slate-200" >
+            <div class="p-6 space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Update First Name</label>
+                    <input type="text" name="first_name" value="{{ teacher.first_name }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1 mt-4">Update Last Name</label>
+                    <input type="text" name="last_name" value="{{ teacher.last_name }}" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Change Subject</label>
+                    <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl" name="subject">
+                        {% for subject in subjects %}
+                            <option value="{{ subject.id }}" {% if teacher.subject.id == subject.id %}selected{% endif %}>
+                                {{ subject.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Status</label>
+                    <div class="flex gap-4 mt-2">
+                        <select name="status" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-green-600 focus:outline-none transition">
+                            <option value="ACTIVE" {% if teacher.status == "ACTIVE" %}selected{% endif %}>Active</option>
+                            <option value="INACTIVE" {% if teacher.status == "INACTIVE" %}selected{% endif %}>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <a href="{% url 'manage_teachers' %}" class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-50 transition">Dismiss</a>
+                    <button type="submit" class="flex-1 px-4 py-2.5 bg-green-900 text-white rounded-xl font-bold text-sm shadow-lg shadow-green-100 hover:bg-green-800 transition">Update Record</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        
+            function editModal() {
+            const modal = document.getElementById('editmodal');
+            if(modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            } else {
+                modal.classList.add('active');
+            }
+        }
+    </script>
+{% endblock %}
