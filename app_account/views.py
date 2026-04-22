@@ -7,8 +7,13 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator as TokenGenerator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth import get_user_model
 
 # Create your views here.
+token_generator = TokenGenerator()
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get('username')
@@ -19,7 +24,10 @@ def login_view(request):
             login(request, user)
             return redirect('staff_dashboard') 
         else:
-            return render(request, 'app_account/login.html', {'error': 'Invalid username or password'})
+            messages.error(request, 'Invalid username or password. Please try again.')
+            return render(request, 'app_account/login.html', {
+                'old_data': request.POST,
+            })
     
     
     return render(request, 'app_account/login.html')
@@ -62,15 +70,19 @@ def logout_view(request):
 def forgotpassword_view(request):
     if request.method == "POST":
         email = request.POST.get('email')
+        User = get_user_model()
 
         user = User.objects.filter(email=email).first()
-
         if not user:
             messages.error(request, 'No user found with this email address.')
             return redirect('forgot_password')
 
+        token = token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+        
         # Create reset URL
-        reset_url = request.build_absolute_uri(reverse("reset_password"))
+        reset_url = request.build_absolute_uri(reverse("reset_password", kwargs={"uidb64": uid, "token": token}))
 
         # Render email template
         html_content = render_to_string(
@@ -97,26 +109,35 @@ def forgotpassword_view(request):
             print("EMAIL ERROR:", e)  
             messages.error(request, 'Failed to send email. Try again.')
             return redirect('forgot_password')
+        
+        
 
         
 
     return render(request, 'app_account/forgot_password.html')
 
-def resetpassword_view(request):
-    if request.method == "POST":
-        new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
-        current_password = request.POST.get('current_password')
+def resetpassword_view(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
 
-        if new_password == confirm_password:
-            user = User.objects.filter(current_password=request.user.password).first()
-            user.set_password(new_password)
-            user.save()
-            
-            messages.success(request, 'Password reset successful!')
-            return redirect('login')
-        else:
-            messages.error(request, 'Passwords do not match. Please try again.')
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    
+    if user is not None and token_generator.check_token(user, token):
+        
+        if request.method == "POST":
+            new_password = request.POST.get('new_password')
+            confirm_password = request.POST.get('confirm_password')
+
+            if new_password == confirm_password:
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, 'Password reset successful!')
+                return redirect('login')
+            else:
+                messages.error(request, 'Passwords do not match. Please try again.')
     
     return render(request, 'app_account/reset_password.html')
 

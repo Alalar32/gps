@@ -28,7 +28,7 @@
             <div
               class="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4"
             >
-              G
+              GPS
             </div>
             <h1 class="text-2xl font-bold text-slate-900">Login</h1>
             <p class="text-slate-500 text-sm mt-2">
@@ -63,7 +63,7 @@
               <input
                 type="text"
                 name="username"
-                required
+                required value="{{ old_data.username|default:'' }}"
                 class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
               />
             </div>
@@ -73,7 +73,7 @@
               >
               <input
                 type="password"
-                name="password"
+                name="password" value="{{ old_data.password|default:'' }}"
                 required
                 class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-600/20 focus:border-green-600 transition"
               />
