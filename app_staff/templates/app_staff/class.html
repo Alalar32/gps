@@ -8,6 +8,13 @@
                             <h3 class="text-lg font-bold">Academic Classes</h3>
                             <p class="text-sm text-slate-500">Manage all registered school levels</p>
                         </div>
+                        <form action="." method="get" class="flex gap-2">
+                            <select id="class-filter" name="class" onchange="this.form.submit()" class="text-sm text-green-600 font-bold">
+                                <option value="all" {%if request.GET.class == "all" %}selected{% endif %}>All Classes</option>
+                                <option value="active" {%if request.GET.class == "active" %}selected{% endif %}>Active Classes</option>
+                                <option value="inactive" {%if request.GET.class == "inactive" %}selected{% endif %}>Inactive Classes</option>
+                            </select>
+                        </form>
                         <button onclick="openModal('class-reg')" class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-green-100">+ Add Class</button>
                     </div>
                     <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
@@ -25,6 +32,9 @@
                                         <td class="px-6 py-4 text-right">
                                             <a href="{% url 'delete_class' class.id %}" class="text-red-600 hover:text-red-800 text-right font-bold">
                                                 Delete
+                                            </a>
+                                            <a href="{% url 'deactivate_class' class.id %}" class="ml-4 text-yellow-600 hover:text-yellow-800 text-right font-bold">
+                                                {% if class.is_active %}Deactivate{% else %}Activate{% endif %}
                                             </a>
                                         </td>
                                     </tr>

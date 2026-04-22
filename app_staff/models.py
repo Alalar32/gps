@@ -1,7 +1,8 @@
 from django.db import models
 
 class Class(models.Model):
-        name = models.CharField(max_length=20)
+        name = models.CharField(max_length=20, unique=True)
+        is_active = models.BooleanField(default=True)
         
 
 class Person(models.Model):

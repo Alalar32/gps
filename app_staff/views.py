@@ -25,7 +25,7 @@ def dashboard_view(request):
                 students = students.filter(Class_id=class_id)
     
             
-    return render(request, 'app_staff/dashboard.html', {'students': students,'search_query': search_query, 'classes': Class.objects.all(), 'selected_class': class_id})
+    return render(request, 'app_staff/dashboard.html', {'students': students,'search_query': search_query, 'classes': Class.objects.filter(is_active=True), 'selected_class': class_id})
 
 def enroll_student(request):
     if request.method == "POST":
@@ -190,14 +190,31 @@ def manage_classes_view(request):
             c.save()
             messages.success(request, "Class added successfully!")
             return redirect('/staff/manage-class')
-    return render(request, 'app_staff/class.html', {'classes': Class.objects.all()})
+        
+    if request.method == "GET":
+        filter_option = request.GET.get('class', 'all')
+        if filter_option == 'active':
+            classes = Class.objects.filter(is_active=True)
+        elif filter_option == 'inactive':
+            classes = Class.objects.filter(is_active=False)
+        else:
+            classes = Class.objects.all()
+    return render(request, 'app_staff/class.html', {'classes': classes},)
 
 def delete_class(request, class_id):
     class_instance = Class.objects.get(id=class_id)
     class_instance.delete()
     messages.success(request, "Class deleted successfully!")
     
-    return redirect('/staff/manage-class')
+    return render(request, 'app_staff/class.html', {'classes': Class.objects.all()})
+
+def deactivate_class(request, class_id):
+    class_instance = Class.objects.get(id=class_id)
+    class_instance.is_active = not class_instance.is_active
+    class_instance.save()
+    status = "deactivated" if not class_instance.is_active else "activated"
+    messages.success(request, f"Class {status} successfully!")
+    return redirect( '/staff/manage-class')
 
 def create_report_view(request):
     if request.method == "POST":

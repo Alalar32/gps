@@ -43,7 +43,7 @@
                 <select name="class"  onchange="this.form.submit()" class="text-sm text-green-600 font-bold">
                   <option value="All Classes">All Classes</option>
                   {% for class in classes %}
-                    <option value="{{ class.id }}" {% if class.id == selected_class %}selected{% endif %} {%if request.GET.class == class.id|stringformat:"s" %}selected{% endif %}>
+                    <option  value="{{ class.id }}" {% if class.id == selected_class %}selected{% endif %} {%if request.GET.class == class.id|stringformat:"s" %}selected{% endif %}>
                       {{ class.name }}
                     </option>
                   {% endfor %}
