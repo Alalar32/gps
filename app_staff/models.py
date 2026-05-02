@@ -26,6 +26,22 @@ class Teacher(models.Model):
         last_name = models.CharField(max_length=30)
         status= models.CharField(max_length=20, default="ACTIVE")
         subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+class Academic_year(models.Model):
+        name = models.CharField(max_length=20)
+        start_date = models.DateField()
+        end_date = models.DateField( null=True, blank=True)
+        is_active = models.BooleanField(default=True)
+        
+class Term(models.Model):
+        TERM_CHOICES = [('Term 1', 'Term 1'),
+                ('Term 2', 'Term 2'),
+                ('Term 3', 'Term 3')]
+        name= models.CharField(max_length=10, choices=TERM_CHOICES, null=True, blank=True)
+        academic_year= models.ForeignKey(Academic_year, on_delete=models.CASCADE)
+        start_date = models.DateField()
+        end_date = models.DateField( null=True, blank=True)
+        is_active = models.BooleanField(default=True)
         
 class Report(models.Model):
         student = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='reports')
@@ -34,7 +50,4 @@ class Report(models.Model):
         exam = models.IntegerField()
         total = models.IntegerField(null=True, blank=True)
         grade = models.CharField(max_length=2, null=True, blank=True)
-        TERM_CHOICES = [('Term 1', 'Term 1'),
-                ('Term 2', 'Term 2'),
-                ('Term 3', 'Term 3')]
-        terms= models.CharField(max_length=10, choices=TERM_CHOICES, null=True, blank=True)
+        terms = models.ForeignKey(Term, on_delete=models.CASCADE, null=True, blank=True)

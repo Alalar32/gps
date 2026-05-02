@@ -1,0 +1,353 @@
+{% extends 'app_staff/base.html' %}
+{% load static %}
+{% block pagetitle %}
+                <div class="flex items-center">
+                    <button onclick="toggleSidebar()" class="lg:hidden mr-4 p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="flex flex-col">
+                        <h1 class="text-lg font-bold text-slate-800 tracking-tight">Academic Management</h1>
+                        <nav class="flex text-[10px] font-medium text-slate-400 space-x-2">
+                            <span>Portal</span>
+                            <span>/</span>
+                            <span class="text-emerald-600">Configuration</span>
+                        </nav>
+                    </div>
+                </div>
+{% endblock %}
+{% block search %}
+<div class="flex items-center space-x-3">
+                    <div class="hidden sm:flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100 mr-2">
+                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2 animate-pulse"></span>
+                        {% for year in academic_year %}
+                        <span class="text-[11px] font-bold">{{year.name}}</span>
+                        {% endfor %}
+                    </div>
+                    <button class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-all relative">
+                        <i class="far fa-bell text-lg"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    
+{% endblock %}
+{% block content %}
+
+
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-8 mb-8">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <span class="text-[10px] font-bold text-emerald-600 uppercase">Current</span>
+                        </div>
+                        {% for year in academic_year %}
+                        <p class="text-xs font-medium text-slate-500">Active Academic Year</p>
+                        <h3 class="text-xl font-bold text-slate-800">{{year.name}}</h3>
+                        {% endfor %}
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                        </div>
+                        {% for term in terms %}
+                        <p class="text-xs font-medium text-slate-500">Current Term</p>
+                        <h3 class="text-xl font-bold text-slate-800">{{term.name}}</h3>
+                        {% endfor %}
+                    </div>
+                   
+                </div>
+
+                <div class="space-y-8">
+                    
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-emerald-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-emerald-200">
+                                    <i class="fas fa-calendar-check text-xs"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-base font-bold text-slate-800">Academic Year Management</h2>
+                                    <p class="text-[11px] text-slate-500">Define the overarching sessions for the school</p>
+                                </div>
+                            </div>
+                            <button onclick="toggleModal('modalYear')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 shadow-lg shadow-emerald-600/10 active:scale-95">
+                                <i class="fas fa-plus"></i>
+                                <span>Add Academic Year</span>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left whitespace-nowrap">
+                                <thead>
+                                    <tr class="bg-white border-b border-slate-100">
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Session Name</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Start Date</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">End Date</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    {% for year in academic_year %}
+                                    <tr class="hover:bg-slate-50/80 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <span class="text-sm font-bold text-slate-700">{{year.name}}</span>
+                                        </td>
+                                    <td class="px-6 py-4 text-xs text-slate-500">{{year.start_date}}</td>
+                                        <td class="px-6 py-4 text-xs text-slate-500">{{year.end_date}}</td>
+                                        <td class="px-6 py-4">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold
+                                                    {% if year.is_active %}
+                                                        bg-emerald-100 text-emerald-700 border border-emerald-200
+                                                    {% else %}
+                                                        bg-slate-100 text-slate-500 border border-slate-200
+                                                    {% endif %}
+                                                    ">
+                                                        {% if year.is_active %}
+                                                            <span class="w-1 h-1 bg-emerald-500 rounded-full mr-1.5"></span>
+                                                            Active
+                                                        {% else %}
+                                                            <span class="w-1 h-1 bg-slate-400 rounded-full mr-1.5"></span>
+                                                            Inactive
+                                                        {% endif %}
+                                                    </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <div class="flex items-center justify-end space-x-1">
+                                                <a href="{% url 'edit_term' term.id %}" class="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"><i class="fas fa-edit text-xs"></i></a>
+                                                <a href="{% url 'delete_term' term.id %}" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"><i class="fas fa-trash-alt text-xs"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-blue-200">
+                                    <i class="fas fa-layer-group text-xs"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-base font-bold text-slate-800">Term Management</h2>
+                                    <p class="text-[11px] text-slate-500">Subdivide academic years into specific terms</p>
+                                </div>
+                            </div>
+                            <button onclick="toggleModal('modalTerm')" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 shadow-lg shadow-slate-900/10 active:scale-95">
+                                <i class="fas fa-plus"></i>
+                                <span>Define New Term</span>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left whitespace-nowrap">
+                                <thead>
+                                    <tr class="bg-white border-b border-slate-100">
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Term Name</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Academic Year</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Duration</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    {% for term in terms %}
+                                    <tr class="hover:bg-slate-50/80 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                                <span class="text-sm font-bold text-slate-700">{{ term.name }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="text-[11px] font-bold px-2 py-1 bg-slate-100 rounded-md text-slate-600">{{ term.academic_year.name }}</span>
+                                        </td>
+                                        <td class="px-6 py-4 flex flex-col">
+                                            <span class="text-xs text-slate-700 font-medium">{{ term.start_date }} - {{ term.end_date }}</span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {% if term.is_active %}
+                                                            <span class="w-1 h-1 bg-emerald-500 rounded-full mr-1.5"></span>
+                                                            Active
+                                                        {% else %}
+                                                            <span class="w-1 h-1 bg-slate-400 rounded-full mr-1.5"></span>
+                                                            Inactive
+                                                        {% endif %}
+                                                    </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button class="p-2 text-slate-400 hover:text-slate-800 transition-all"><i class="fas fa-ellipsis-v text-xs"></i></button>
+                                        </td>
+                                    </tr>
+                                    {% endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-12"></div>
+
+        <div id="modalYear" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div onclick="toggleModal('modalYear')" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"></div>
+            <form action="{% url 'create_academic_year' %}" method="post" class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modalYearContent">
+                {% csrf_token %}
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">New Academic Year</h3>
+                            <p class="text-[10px] text-slate-400">Add a new session to the database</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleModal('modalYear')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 transition-colors">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
+                <div class="p-8 space-y-5">
+                    
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Year Title</label>
+                        <input name="name" type="text" placeholder="e.g., 2025/2026" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white outline-none transition-all text-sm font-medium">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Start Date</label>
+                            <input name="start_date" type="date"  class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white outline-none transition-all text-sm font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">End Date</label>
+                            <input name="end_date" type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white outline-none transition-all text-sm font-medium">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100/50">
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-emerald-900">Set as Active</span>
+                            <span class="text-[10px] text-emerald-600">This will deactivate current years</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input name="status" type="checkbox" class="sr-only peer switch-input">
+                            <div class="w-11 h-6 bg-slate-200 rounded-full switch-bg peer-focus:outline-none transition-all"></div>
+                            <div class="switch-dot absolute left-[2px] top-[2px] bg-white w-5 h-5 rounded-full transition-all border border-slate-300"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="p-6 px-8 bg-slate-50/80 border-t border-slate-100 flex items-center space-x-3">
+                    <button onclick="toggleModal('modalYear')" class="flex-1 px-4 py-3 text-xs font-bold text-slate-500 hover:bg-slate-200 rounded-xl transition-colors">Discard</button>
+                    <button type="submit" class="flex-[2] px-4 py-3 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all shadow-lg shadow-emerald-600/20 active:scale-95">Save Academic Year</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="modalTerm" class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden">
+            <div onclick="toggleModal('modalTerm')" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"></div>
+            <form action="{% url 'create_term' %}" method="POST" class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modalTermContent">
+                {% csrf_token %}
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800">Add Academic Term</h3>
+                            <p class="text-[10px] text-slate-400">Configure terms for active years</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleModal('modalTerm')" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 transition-colors">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
+                <div class="p-8 space-y-5">
+                    
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Select Academic Year</label>
+                        <div class="relative">
+                            <select name="year" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-slate-500/10 focus:border-slate-800 focus:bg-white outline-none transition-all text-sm font-medium appearance-none">
+                                {% for year in academic_year %}
+                                <option value="{{ year.id }}">{{ year.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-4 top-4 text-slate-400 text-xs pointer-events-none"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Term Name</label>
+                        <select name="term" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-slate-500/10 focus:border-slate-800 focus:bg-white outline-none transition-all text-sm font-medium appearance-none">
+                            <option value="term 1">First Term</option>
+                            <option value="term 2">Second Term</option>
+                            <option value="term 3">Third Term</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Starts</label>
+                            <input name="start_date" type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-slate-500/10 outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Ends</label>
+                            <input name="end_date" type="date" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-slate-500/10 outline-none text-sm">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                        <span class="text-xs font-bold text-slate-700">Set as Current Active Term</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input name="is_active" type="checkbox" class="sr-only peer switch-input">
+                            <div class="w-11 h-6 bg-slate-200 rounded-full switch-bg peer-focus:outline-none transition-all"></div>
+                            <div class="switch-dot absolute left-[2px] top-[2px] bg-white w-5 h-5 rounded-full transition-all border border-slate-300"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="p-6 px-8 bg-slate-50/80 border-t border-slate-100 flex items-center space-x-3">
+                    <button onclick="toggleModal('modalTerm')" class="flex-1 px-4 py-3 text-xs font-bold text-slate-500 hover:bg-slate-200 rounded-xl transition-colors">Cancel</button>
+                    <button type="submit" class="flex-[2] px-4 py-3 text-xs font-bold text-white bg-slate-800 hover:bg-slate-900 rounded-xl transition-all shadow-lg shadow-slate-900/20 active:scale-95">Complete Setup</button>
+                </div>
+                
+            </form>
+        </div>
+
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Modal Logic
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            const content = document.getElementById(modalId + 'Content');
+            
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent scroll
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+        }
+    </script>
+    {% endblock %}
+</body>
+</html>

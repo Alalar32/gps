@@ -4,6 +4,8 @@ from .models import Person, Teacher
 from .models import Subject
 from .models import Report
 from .models import Class
+from .models import Academic_year
+from .models import Term
 from django.contrib import messages
 from django.db.models import Q
 @login_required
@@ -216,7 +218,7 @@ def deactivate_class(request, class_id):
     messages.success(request, f"Class {status} successfully!")
     return redirect( '/staff/manage-class')
 
-def create_report_view(request):
+def create_report_view(request): 
     if request.method == "POST":
         student_id = request.POST.get('student')
         subject_id = request.POST.get('subject')
@@ -309,3 +311,59 @@ def reports_view(request):
         messages.success(request, "Progress report saved successfully!")
         return redirect('/staff/reports')
     return render(request, 'app_staff/reports.html', {'students': Person.objects.all(), 'subjects': Subject.objects.all(), 'reports': Report.objects.all(), 'terms': Report.TERM_CHOICES, 'classes': Class.objects.all()})
+
+def academic_management_view(request):
+    return render(request, 'app_staff/academic_man.html',{'academic_year':Academic_year.objects.all(), 'terms': Term.objects.all()})
+
+def create_academic_year(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        is_active = request.POST.get('status') == 'on'
+        
+        academic_year = Academic_year(name=name, start_date=start_date, end_date=end_date, is_active=is_active)
+        academic_year.save()
+        
+        messages.success(request, "Academic year created successfully!")
+        return redirect('/staff/academic_management')
+
+def create_term(request):
+    if request.method == "POST":
+        name = request.POST.get('term')
+        academic_year_id = request.POST.get('year')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        academic_year = Academic_year.objects.get(id=academic_year_id)
+        
+        term = Term(name=name, academic_year=academic_year, start_date=start_date, end_date=end_date, is_active=is_active)
+        term.save()
+        
+        messages.success(request, "Term created successfully!")
+        return redirect('/staff/academic_management')
+
+def edit_term(request,term_id):
+    term = Term.objects.get(id=term_id)
+    if request.method == "POST":
+        term.name = request.POST.get('term')
+        academic_year_id = request.POST.get('year')
+        term.start_date = request.POST.get('start_date')
+        term.end_date = request.POST.get('end_date')
+        term.is_active = request.POST.get('is_active') == 'on'
+        
+        academic_year = Academic_year.objects.get(id=academic_year_id)
+        term.academic_year = academic_year
+        
+        term.save()
+        
+        messages.success(request, "Term updated successfully!")
+        return redirect('/staff/academic_management')
+    return render(request, 'app_staff/edit_term.html', {'term': Term.objects.get(id=term_id), 'academic_years': Academic_year.objects.all()})
+
+def delete_term(request, term_id):
+    term = Term.objects.get(id=term_id)
+    term.delete()
+    messages.success(request, "Term deleted successfully!")
+    return redirect('/staff/academic_management')
