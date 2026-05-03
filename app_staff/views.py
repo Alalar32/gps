@@ -344,26 +344,22 @@ def create_term(request):
         messages.success(request, "Term created successfully!")
         return redirect('/staff/academic_management')
 
-def edit_term(request,term_id):
-    term = Term.objects.get(id=term_id)
+def edit_year(request,year_id):
+    year = Academic_year.objects.get(id=year_id)
     if request.method == "POST":
-        term.name = request.POST.get('term')
-        academic_year_id = request.POST.get('year')
-        term.start_date = request.POST.get('start_date')
-        term.end_date = request.POST.get('end_date')
-        term.is_active = request.POST.get('is_active') == 'on'
+        year.name = request.POST.get('name')
+        year.start_date = request.POST.get('start_date')
+        year.end_date = request.POST.get('end_date')
+        year.is_active = request.POST.get('status') == 'on'
         
-        academic_year = Academic_year.objects.get(id=academic_year_id)
-        term.academic_year = academic_year
+        year.save()
         
-        term.save()
-        
-        messages.success(request, "Term updated successfully!")
+        messages.success(request, "Academic year updated successfully!")
         return redirect('/staff/academic_management')
-    return render(request, 'app_staff/edit_term.html', {'term': Term.objects.get(id=term_id), 'academic_years': Academic_year.objects.all()})
+    return render(request, 'app_staff/edit_year.html', {'year': Academic_year.objects.get(id=year_id)})
 
-def delete_term(request, term_id):
-    term = Term.objects.get(id=term_id)
-    term.delete()
-    messages.success(request, "Term deleted successfully!")
+def delete_year(request, year_id):
+    year = Academic_year.objects.get(id=year_id)
+    year.delete()
+    messages.success(request, "Academic year deleted successfully!")
     return redirect('/staff/academic_management')

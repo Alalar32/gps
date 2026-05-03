@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <title>| Green Pastures School</title>
+    {% comment %}
+    <link type="image/jpeg" rel="icon" href="{% static 'icon.jpg' %}" />
+    {% endcomment %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Edit Academic Year</title>
+  </head>
+  <body>
+    <div class="flex items-center">
+      <a
+        href="{% url 'academic_management' %}"
+        class="mr-4 p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+      >
+        <i class="fas fa-arrow-left"></i> Back to Academic Management
+      </a>
+    </div>
+
+        <div class="flex flex-col items-start space-y-1 mx-10 ">
+            <h1 class="text-lg font-bold text-slate-800 tracking-tight">
+            Edit Academic Year
+            </h1>
+            <nav class="flex text-[10px] font-medium text-slate-400 space-x-2">
+            <span>Portal</span>
+            <span>/</span>
+            <span>Configuration</span>
+            <span>/</span>
+            <span class="text-emerald-600">Edit Year</span>
+            </nav>
+        </div>
+
+    <div class="max-w-2xl mx-auto mt-8">
+      <div
+        class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden"
+      >
+        <!-- Header -->
+        <div
+          class="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center space-x-4"
+        >
+          <div
+            class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center shadow-inner"
+          >
+            <i class="fas fa-edit text-lg"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-800">
+              Modify Academic Session
+            </h2>
+            <p class="text-[11px] text-slate-500">
+              Update dates and status for the selected academic year
+            </p>
+          </div>
+        </div>
+
+        <form
+          action="{% url 'edit_year' year.id %}"
+          method="POST"
+          class="p-8 space-y-6"
+        >
+          {% csrf_token %}
+
+          <div class="space-y-1">
+            <label
+              class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1"
+              >Academic Year Title</label
+            >
+            <div class="relative group">
+              <div
+                class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-emerald-500 transition-colors"
+              >
+                <i class="fas fa-calendar"></i>
+              </div>
+              <input
+                name="name"
+                type="text"
+                value="{{ year.name }}"
+                placeholder="e.g., 2025/2026"
+                required
+                class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white outline-none transition-all text-sm font-bold text-slate-700"
+              />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="space-y-1">
+              <label
+                class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1"
+                >Start Date</label
+              >
+              <input
+                name="start_date"
+                type="date"
+                value="{{ year.start_date|date:'Y-m-d' }}"
+                required
+                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white outline-none transition-all text-sm font-medium text-slate-700"
+              />
+            </div>
+            <div class="space-y-1">
+              <label
+                class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 ml-1"
+                >End Date</label
+              >
+              <input
+                name="end_date"
+                type="date"
+                value="{{ year.end_date|date:'Y-m-d' }}"
+                required
+                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white outline-none transition-all text-sm font-medium text-slate-700"
+              />
+            </div>
+          </div>
+
+          <div
+            class="p-5 bg-emerald-50/50 rounded-2xl border border-emerald-100 flex items-center justify-between"
+          >
+            <div class="flex items-center space-x-3">
+              <div
+                class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-emerald-600 shadow-sm"
+              >
+                <i class="fas fa-toggle-on"></i>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-xs font-bold text-emerald-900"
+                  >Active Status</span
+                >
+                <span class="text-[10px] text-emerald-600 font-medium">Currently: {% if year.is_active %}Active{% else %}Inactive{% endif %}</span
+                >
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input
+                name="is_active"
+                type="checkbox"
+                {%
+                if
+                year.is_active
+                %}checked{%
+                endif
+                %}
+                class="sr-only peer"
+              />
+              <div
+                class="w-12 h-6 bg-slate-200 rounded-full peer peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-500/20 transition-all peer-checked:bg-emerald-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-6 peer-checked:after:border-white shadow-inner"
+              ></div>
+            </label>
+          </div>
+
+          <div class="pt-4 flex items-center space-x-4">
+            <a
+              href="{% url 'academic_management' %}"
+              class="flex-1 px-6 py-3.5 text-xs font-bold text-slate-500 text-center hover:bg-slate-100 rounded-2xl transition-all border border-transparent hover:border-slate-200"
+            >
+              Cancel Changes
+            </a>
+            <button
+              type="submit"
+              class="flex-[2] px-6 py-3.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 active:scale-[0.98] flex items-center justify-center space-x-2"
+            >
+              <i class="fas fa-check-circle"></i>
+              <span>Update Academic Year</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="px-8 pb-8">
+          <div class="pt-6 border-t border-slate-100">
+            <div
+              class="flex items-center justify-between p-4 bg-rose-50/30 rounded-2xl border border-rose-100"
+            >
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-8 h-8 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center"
+                >
+                  <i class="fas fa-trash-alt text-xs"></i>
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-xs font-bold text-rose-900"
+                    >Danger Zone</span
+                  >
+                  <span class="text-[10px] text-rose-500"
+                    >Remove this academic year permanently</span
+                  >
+                </div>
+              </div>
+              <a
+                href="{% url 'delete_year' year.id %}"
+                class="px-4 py-2 bg-white border border-rose-200 text-rose-600 text-[10px] font-bold rounded-lg hover:bg-rose-600 hover:text-white transition-all"
+              >
+                Delete Year
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

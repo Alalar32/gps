@@ -23,6 +23,6 @@ urlpatterns = [
     path('academic_management/', views.academic_management_view, name='academic_management'),
     path('create_academic_year/', views.create_academic_year, name='create_academic_year'),
     path('create_term/', views.create_term, name='create_term'),
-    path('edit_term/<int:term_id>/', views.edit_term, name='edit_term'),
-    path('delete_term/<int:term_id>/', views.delete_term, name='delete_term'),
+    path('edit_year/<int:year_id>/', views.edit_year, name='edit_year'),
+    path('delete_year/<int:year_id>/', views.delete_year, name='delete_year'),
 ]
